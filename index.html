@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumbar Segment Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Lumbar Segment Explorer</h1>
+    <p>Side view of the L1 to S1 model. Give any level a disc condition (degenerated, bulging, herniated, osteophytes, thinning or fused) and a severity, then drag the view or move the sliders to bend. Loads, disc heights and the space around the nerves update live and are compared with a healthy spine in the same posture.</p>
+  </header>
+
+  <section class="stage">
+    <div class="viewer">
+      <div class="hint">Drag left or right to bend · scroll to zoom</div>
+      <div class="legend"><span>disc compression</span><div class="ramp"></div><span>0 N · 1500 · 3000+</span></div>
+      <div class="zoombar">
+        <label for="focus" class="sr">Focus</label>
+        <select id="focus"><option value="all">Whole body</option><option value="spine" selected>Lumbar spine</option>
+          <option value="L1-L2">L1-L2</option><option value="L2-L3">L2-L3</option><option value="L3-L4">L3-L4</option><option value="L4-L5">L4-L5</option><option value="L5-S1">L5-S1</option></select>
+        <button id="zoomOutBtn" aria-label="Zoom out">−</button><span id="zoomOut">1.0×</span><button id="zoomIn" aria-label="Zoom in">+</button>
+      </div>
+      <svg id="view" viewBox="0 0 560 550" role="img" aria-label="Side view of the lumbar spine in the current posture"></svg>
+    </div>
+
+    <div class="panel">
+      <div class="group">
+        <h2>Postures</h2>
+        <div class="presets" id="presets"></div>
+      </div>
+      <div class="group">
+        <h2>Motion and load</h2>
+        <div class="slider"><label for="lumbar">Lumbar flexion</label><input id="lumbar" type="range" min="-30" max="50" step="0.5" value="20"><output id="lumbarOut"></output></div>
+        <div class="slider"><label for="pelvis">Pelvic tilt</label><input id="pelvis" type="range" min="-10" max="60" step="0.5" value="15"><output id="pelvisOut"></output></div>
+        <div class="slider"><label for="mass">Body mass</label><input id="mass" type="range" min="40" max="140" step="1" value="75"><output id="massOut"></output></div>
+        <div class="slider"><label for="hand">Load in hands</label><input id="hand" type="range" min="0" max="30" step="1" value="0"><output id="handOut"></output></div>
+        <div class="slider"><label for="reach">Load in front of shoulders</label><input id="reach" type="range" min="0" max="600" step="10" value="250"><output id="reachOut"></output></div>
+        <p class="note">Arms hang from the shoulders, so 0 mm means the load is right under them (a box between the knees). Negative lumbar flexion is extension. Flexion is shared between the levels in proportion to each level's range of motion.</p>
+      </div>
+      <div class="group">
+        <div class="grouphead"><h2>Level condition and severity</h2><button class="linkbtn" id="resetLevels">Set all healthy</button></div>
+        <div class="levels" id="levels"></div>
+        <ul class="effects" id="effects"></ul>
+      </div>
+      <div class="group">
+        <h2>When a level moves less than normal, the lost motion goes to</h2>
+        <div class="modes" id="modes">
+          <label><input type="radio" name="mode" id="mode-spine" value="spine" checked><span>The other lumbar levels<small>Same lumbar flexion as the healthy spine; neighbours bend further.</small></span></label>
+          <label><input type="radio" name="mode" id="mode-hips" value="hips"><span>The hips<small>Neighbours move normally; the pelvis tilts further to keep the same lean.</small></span></label>
+          <label><input type="radio" name="mode" id="mode-none" value="none"><span>Nowhere<small>Same moment as the healthy spine; the trunk simply leans less.</small></span></label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" id="stats"></section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Loads per level</h2>
+      <p>Change is against a healthy spine with the same sliders.</p>
+    </div>
+    <div class="tablewrap"><table id="table"></table></div>
+    <div class="actions"><button class="btn" id="copy">Copy table as CSV</button><span id="copyMsg" aria-live="polite"></span></div>
+    <textarea id="csvFallback" hidden readonly aria-label="CSV of the current table"></textarea>
+  </section>
+
+  <section class="card chart">
+    <div class="card-head">
+      <h2>Across the full flexion range</h2>
+      <p>Every level shares the same moment, so one line covers all moving levels. The dotted marker is the current flexion.</p>
+    </div>
+    <div class="tablewrap"><svg id="chart" viewBox="0 0 900 312" role="img" aria-label="Passive moment at each level against lumbar flexion"></svg></div>
+  </section>
+
+  <footer>
+    <p><strong>What the numbers mean.</strong> Passive moment is what the disc, ligaments and facets resist; it rises steeply near the end of a level's range (Yamamoto 1989 curves, tested up to 10 Nm). Ligament tension is the posterior ligaments' share in flexion. Disc compression adds body weight above the level, the load in the hands, and one equivalent back or abdominal muscle that balances the moment. Nucleus pressure is 1.5 × compression / endplate area.</p>
+    <p><strong>Disc conditions.</strong> Each condition changes four things at its level, scaled by severity: how much the level moves, disc height, how much pressure the nucleus holds, and any posterior protrusion or bone spurs. A lower disc passes compression to the facets. Posterior disc height follows the level's angle, and foramen height follows posterior disc height. The red flags use Hasegawa et al. (1995), where a posterior disc height of 4 mm or less with a foramen of 15 mm or less goes with nerve root compression, and a protrusion of more than half of a 16 mm canal. The sizes of these effects are assumed values chosen from the direction reported in the literature. They are not fitted to data.</p>
+    <p><strong>Limits.</strong> Static, sagittal plane only. The single-muscle model overestimates loads in forward bending by about 70%, so compare cases rather than trusting absolute newtons. Values past a level's tested range are extrapolated and flagged. A fused level's moment is carried by the implant. Nucleus pressure at L5-S1 reads high because its generated disc has a small endplate.</p>
+  </footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
