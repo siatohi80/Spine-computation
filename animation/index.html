@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumbar Spine Model: Animation · Siavash Tohidi</title>
+<meta name="description" content="Showcase animation of a rigged L1 to S1 lumbar spine model, with discs coloured by load.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Geist:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#1A1916; --muted:#5B574F; --line:#D8D1C2; --bg:#F3F0E8; --acc:#94490F; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"Geist",system-ui,sans-serif; }
+  .wrap { max-width:1312px; margin:0 auto; padding:0 16px 64px; }
+  header { display:flex; justify-content:space-between; align-items:baseline; padding:28px 0; border-bottom:1px solid var(--line); }
+  .logo { font-family:"Instrument Serif",Georgia,serif; font-size:28px; }
+  .meta { font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  h1 { font-family:"Instrument Serif",Georgia,serif; font-weight:400; font-size:clamp(40px,7vw,88px); line-height:.95; letter-spacing:-.02em; margin:48px 0 28px; }
+  h1 span { color:var(--acc); }
+  video { display:block; width:100%; height:auto; aspect-ratio:16/9; background:#0E1A2B; }
+  p { font-size:15px; line-height:1.6; color:var(--muted); max-width:720px; margin:16px 0 0; }
+  footer { margin-top:56px; padding-top:20px; border-top:1px solid var(--line); font-size:14px; color:var(--muted); }
+  a { color:var(--acc); text-decoration:none; }
+  @media (max-width:600px) { .meta { display:none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><span class="logo">Siavash Tohidi</span><span class="meta">Lumbar Spine Model · 2026</span></header>
+  <h1>Lumbar Spine <span>/</span> Animation</h1>
+  <video src="spine_showcase.mp4" poster="poster.png" controls playsinline preload="metadata" aria-label="Animation of the rigged lumbar spine bending, twisting and lifting, with discs coloured by load"></video>
+  <p>A rigged L1 to S1 lumbar spine with discs, facet cartilage and ligaments. The spine flexes, extends, bends to the side, twists and lifts 10 kg. Each clear annulus shows the gel nucleus inside it, tinted by the disc load from blue (0 N) to red (3000 N), with a live readout of compression and nucleus pressure at every level. Rendered in Blender Cycles; loads from a Python model driven by posture and body weight (75 kg).</p>
+  <footer>© Siavash Tohidi · <a href="mailto:siavash.tohidi@gmail.com">siavash.tohidi@gmail.com</a></footer>
+</div>
+</body>
+</html>
